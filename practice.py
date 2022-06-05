@@ -45,18 +45,18 @@ def mars_news(browser):
     
 # Add try/except for error handling
 
-   try:
+    try:
 
-    slide_elem = news_soup.select_one('div.list_text')
-    slide_elem.find('div', class_='content_title')
+        slide_elem = news_soup.select_one('div.list_text')
 
-    # Use the parent element to find the first `a` tag and save it as `news_title`
-    news_title = slide_elem.find('div', class_='content_title').get_text()
+        # Use the parent element to find the first `a` tag and save it as `news_title`
+        news_title = slide_elem.find('div', class_='content_title').get_text()
 
-    # Use the parent element to find the paragraph text
-    news_p = slide_elem.find('div', class_='article_teaser_body').get_text()
-    
+        # Use the parent element to find the paragraph text
+        news_p = slide_elem.find('div', class_='article_teaser_body').get_text()
+        
     except AttributeError:
+
         return None, None
     
     return news_title, news_p
@@ -82,13 +82,13 @@ def featured_image(browser):
         # Find the relative image url
         img_url_rel = img_soup.find('img', class_='fancybox-image').get('src')
     
-    except AttributeError
+    except AttributeError:
         return None
     
     # Use the base URL to create an absolute URL
     img_url = f'https://spaceimages-mars.com/{img_url_rel}'
    
- return img_url
+    return img_url
 
 
 def mars_facts():
