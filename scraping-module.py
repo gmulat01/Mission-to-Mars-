@@ -5,7 +5,6 @@ import pandas as pd
 from bs4 import BeautifulSoup as soup
 import datetime as dt
 from webdriver_manager.chrome import ChromeDriverManager
-import time
 
 
 def scrape_all():
@@ -23,13 +22,17 @@ def scrape_all():
       "news_paragraph": news_paragraph,
       "featured_image": featured_image(browser),
       "facts": mars_facts(),
-      "last_modified": dt.datetime.now(),
-      "hemispheres": hemispheres(browser)
+      "last_modified": dt.datetime.now()
+    
     }
     
     #Stop webdriver and return data
     browser.quit()
     return data
+
+# Set up Splinter
+#executable_path = {'executable_path': ChromeDriverManager().install()}
+#browser = Browser('chrome', **executable_path, headless=False)
 
 def mars_news(browser):
     
@@ -45,7 +48,7 @@ def mars_news(browser):
     html = browser.html
     news_soup = soup(html, 'html.parser')
     
-    # Add try/except for error handling
+# Add try/except for error handling
 
     try:
 
@@ -77,7 +80,7 @@ def featured_image(browser):
     html = browser.html
     img_soup = soup(html, 'html.parser')
 
-    # Add try/except for error handling  
+# Add try/except for error handling  
     try:
     
         # Find the relative image url
@@ -111,48 +114,7 @@ def mars_facts():
 
     # Convert dataframe into HTML format, add bootstrap
     
-    return df.to_html(classes="table table-striped")  
-
-def hemispheres(browser):
-
-    url = 'https://marshemispheres.com/'
-    browser.visit(url)
-    # Soupify main page 
-    html = browser.html
-    bsoup = soup(html, 'html.parser')
-    items = bsoup.find("div", {"class":"results"}).find_all("div", {"class", "item"})
-
-    # Initiate return 
-    hemisphere_image_urls = []
-
-    #Each Hemisphere on Main Page 
-    for item in items:
-    
-        #grab link 
-        link = item.find("a", {"class": "itemLink"})["href"]
-        full_url = url + link
-        
-        #Visit link 
-        browser.visit(full_url)
-        time.sleep(1)
-        
-        #Soupify 
-        html = browser.html
-        bsoup = soup(html, 'html.parser')
-        
-        #Grab Data
-        img = bsoup.find("img", {"class", "wide-image"})["src"]
-        img_url = url + img
-        
-        title = bsoup.find("h2", {"class": "title"}).text
-        title = title.split("Enhanced")[0].strip()
-        
-        data = {"img_url": img_url, "title": title}
-        
-        hemisphere_image_urls.append(data)
-        print(hemisphere_image_urls)
-
-    return hemisphere_image_urls
+    return df.to_html(classes="table table-striped")
     
 if __name__ == "__main__":
 
